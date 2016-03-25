@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  jsongame: MyString
+  computermove: false
+  useriswhite: false
+  user_id: 
+
+two:
+  jsongame: MyString
+  computermove: false
+  useriswhite: false
+  user_id: 
