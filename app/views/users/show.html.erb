@@ -3,4 +3,5 @@
 <div>
   <%= @user.email %>
 </div>
+<%= link_to "Create game", games_path(id: current_user.id), :method => :post %>
 <%= link_to "ROOt", root_path %>
