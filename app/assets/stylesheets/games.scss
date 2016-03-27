@@ -1,3 +1,89 @@
 // Place all the styles related to the Games controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.figure{
+  position: absolute; 
+  margin: 0px; 
+  padding: 0px; 
+  display: block; 
+  width: 53px; 
+  height: 53px; 
+  z-index: 5; 
+  transform: translateZ(0px); 
+  cursor: default;
+}
+
+.wr{
+  background: url("/assets/wr.png");
+}
+
+.wp{
+  background: url("/assets/wp.png");
+}
+
+.wn{
+  background: url("/assets/wn.png");
+}
+
+
+.wb{
+  background: url("/assets/wb.png");
+}
+
+.wq{
+  background: url("/assets/wq.png");
+}
+
+.wk{
+  background: url("/assets/wk.png");
+}
+
+.br{
+  background: url("/assets/br.png");
+}
+
+.bp{
+  background: url("/assets/bp.png");
+}
+
+.bn{
+  background: url("/assets/bn.png");
+}
+
+.bb{
+  background: url("/assets/bb.png");
+}
+
+.bq{
+  background: url("/assets/bq.png");
+}
+
+.bk{
+  background: url("/assets/bk.png");
+}
+
+
+
+.digit{
+  display: inline;
+  top: 16px;
+  left: -15px;
+  position: absolute; 
+}
+
+.letter{
+  display: inline;
+  top: 424px;
+  left: 15px;
+  position: absolute; 
+}
+
+#board{
+  width: 424px; 
+  height: 424px; 
+  position: relative;
+  background: url("/assets/53.png");
+  left: 100px;
+  z-index: 1; 
+}
