@@ -8,6 +8,11 @@ class GamesController < ApplicationController
     
   end
 
+  def update
+    puts "AAAAAAAAAAAAAAAAAAAAAAAAAA"
+    render nothing: true
+  end
+
   def create
     @game = Game.new
     @game.user_id = params[:id]

@@ -42,6 +42,12 @@ function initializeUI(){
   });
   $("#SubmitMoveButton").click(function() {
     console.log(afterMove);
+    debugger;
+    $.ajax({
+      type: "PATCH",
+      url: "/games/1",
+      data: afterMove
+    });
     disableButtons(true);
   });
   $("#CancelMoveButton").click(function() {
