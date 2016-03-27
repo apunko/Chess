@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
-  
+  require 'json'
   def show
     @game = Game.find(params[:id])
   end
@@ -9,7 +9,17 @@ class GamesController < ApplicationController
   end
 
   def update
-    puts "AAAAAAAAAAAAAAAAAAAAAAAAAA"
+    game = Game.find(params[:id])
+    moves = params[:moves]
+    board_state = JSON.parse(game.jsongame)
+    moves[:after].each { |key, value| 
+      board_state[key] = value
+    }
+    moves[:before].each { |key, value|
+      board_state.delete(key)
+    }
+    game.jsongame = board_state.to_json
+    game.save
     render nothing: true
   end
 

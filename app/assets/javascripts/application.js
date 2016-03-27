@@ -45,8 +45,14 @@ function initializeUI(){
     debugger;
     $.ajax({
       type: "PATCH",
-      url: "/games/1",
-      data: afterMove
+      url: document.URL,
+      data: { 
+        moves: 
+        { 
+          before: beforeMove,
+          after: afterMove
+        }
+      }
     });
     disableButtons(true);
   });
