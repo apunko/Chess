@@ -22,10 +22,12 @@ $(function() {
   setInitFigures();
   setLettersAndDigits();
   initializeUI();
+
 });
 
-var beforePosition = {};
-var afterPosition = {};
+var beforeMove = [];
+var afterMove = [];
+var moveIsReadyForSubmit = false;
 
 function initializeUI(){
   $( ".draggable" ).draggable({
@@ -34,16 +36,38 @@ function initializeUI(){
       var position = ui.position;
       beforeMove = getMove(getCentral(position), $(this).attr("figuretype"));
     }, 
+    drag: function(event, ui) { if(moveIsReadyForSubmit) return false; },
     stop: function(event, ui){
       position = ui.position; 
       afterMove = getMove(getCentral(position), $(this).attr("figuretype"));
-      setPosition($(this), Object.keys(afterMove)[0], Object.keys(beforeMove)[0]);
-      disableButtons(false);
+      if (!moveIsReadyForSubmit && isMovePossible(beforeMove, afterMove)){
+        setPosition($(this), afterMove[0], beforeMove[0]);
+        moveIsReadyForSubmit = true;
+        disableButtons(false);
+      }
+      else {
+        revertMove(beforeMove);
+        if (!moveIsReadyForSubmit){
+          disableButtons(true);  
+        }
+      }
     }
   });
+  setButtonsEvents();
+  disableButtons(true);
+}
+
+function isMovePossible(beforeMove, afterMove){
+  switch(beforeMove[1]) {
+    case "wp":
+        return true;
+    default:
+        return false;
+  }
+}
+
+function setButtonsEvents(){
   $("#SubmitMoveButton").click(function() {
-    console.log(afterMove);
-    debugger;
     $.ajax({
       type: "PATCH",
       url: document.URL,
@@ -55,25 +79,24 @@ function initializeUI(){
         }
       }
     });
+    moveIsReadyForSubmit = false;
     disableButtons(true);
   });
   $("#CancelMoveButton").click(function() {
-    console.log(beforeMove);
-    revertMove();
+    debugger;
+    moveIsReadyForSubmit = false;
+    revertMove(afterMove);
     disableButtons(true);
   });
-  disableButtons(true);
 }
 
-function revertMove(){
-  debugger;
-  for (var key in afterMove){
-    var elem = $("."+key);
-    setPosition(elem, Object.keys(beforeMove)[0], key);
-  }
+function revertMove(first){
+  var elem = $("."+first[0]);
+  setPosition(elem, beforeMove[0], afterMove[0]);
 }
 
 function disableButtons(value){
+  disabled = value;
   $("#SubmitMoveButton").attr("disabled", value);
   $("#CancelMoveButton").attr("disabled", value);
 }
@@ -83,12 +106,13 @@ function getMove(position, figuretype){
     var letter =  "a".charCodeAt(0) + position.left / Constants.CellWidth;
     letter = String.fromCharCode(letter);
     var something = letter + digit;
-    var move = {};
-    move[something] = figuretype;
+    var move = [];
+    move[0] = something;
+    move[1] = figuretype;
     return move;
 }
 
-var initJson = {}    
+var initJson = {};
 
 var leftTopCorner = [];
 

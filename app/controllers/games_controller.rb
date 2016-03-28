@@ -12,11 +12,11 @@ class GamesController < ApplicationController
     game = Game.find(params[:id])
     moves = params[:moves]
     board_state = JSON.parse(game.jsongame)
-    moves[:after].each { |key, value| 
-      board_state[key] = value
+    moves[:after].each { |value| 
+      board_state[value[0]] = value[1]
     }
-    moves[:before].each { |key, value|
-      board_state.delete(key)
+    moves[:before].each { |value|
+      board_state.delete(value[0])
     }
     game.jsongame = board_state.to_json
     game.save
