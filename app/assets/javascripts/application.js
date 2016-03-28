@@ -27,20 +27,26 @@ $(function() {
 
 var beforeMove = [];
 var afterMove = [];
+var afterMoveToSubmit = [];
+var beforeMoveToSubmit = [];
 var moveIsReadyForSubmit = false;
 
 function initializeUI(){
   $( ".draggable" ).draggable({
     containment: 'parent',
     start: function(event, ui) {
+      if (moveIsReadyForSubmit) return;
       var position = ui.position;
       beforeMove = getMove(getCentral(position), $(this).attr("figuretype"));
     }, 
     drag: function(event, ui) { if(moveIsReadyForSubmit) return false; },
     stop: function(event, ui){
+      if (moveIsReadyForSubmit) return;
       position = ui.position; 
       afterMove = getMove(getCentral(position), $(this).attr("figuretype"));
       if (!moveIsReadyForSubmit && isMovePossible(beforeMove, afterMove)){
+        afterMoveToSubmit = afterMove;
+        beforeMoveToSubmit = beforeMove;
         setPosition($(this), afterMove[0], beforeMove[0]);
         moveIsReadyForSubmit = true;
         disableButtons(false);
@@ -74,8 +80,8 @@ function setButtonsEvents(){
       data: { 
         moves: 
         { 
-          before: beforeMove,
-          after: afterMove
+          before: beforeMoveToSubmit,
+          after: afterMoveToSubmit
         }
       }
     });
