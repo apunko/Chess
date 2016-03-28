@@ -20,6 +20,7 @@ $(function() {
   initJson = JSON.parse($("#jsongame").text())
   setArray();
   setInitFigures();
+  setLettersAndDigits();
   initializeUI();
 });
 
@@ -152,3 +153,18 @@ function getCentral(position){
   return newPosition;
 }
 
+var boardLetters = "abcdefgh";
+var boardDigits = "87654321"
+
+function setLettersAndDigits(){
+  for (var i = 0; i<boardLetters.length; i++){
+    var newDiv = $("<div class='letter'></div>").append(boardLetters[i]);
+    newDiv.css({left: 26+i*Constants.CellWidth});
+    $("#board").append(newDiv);
+  }
+  for (var i = 0; i<boardDigits.length; i++){
+    var newDiv = $("<div class='digit'></div>").append(boardDigits[i]);
+    newDiv.css({top: 16+i*Constants.CellWidth});
+    $("#board").append(newDiv);
+  }
+}
