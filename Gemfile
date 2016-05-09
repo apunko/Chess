@@ -26,7 +26,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'devise'
 gem 'omniauth-facebook'
 gem 'omniauth-vkontakte'
-
+gem 'json', '~> 1.8', '>= 1.8.3'
+gem 'rubytree', '~> 0.9.7'
 
 
 group :development, :test do

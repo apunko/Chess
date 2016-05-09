@@ -22,7 +22,6 @@ $(function() {
   setInitFigures();
   setLettersAndDigits();
   initializeUI();
-
 });
 
 var beforeMove = [];
@@ -66,7 +65,8 @@ function initializeUI(){
 function isMovePossible(beforeMove, afterMove){
   switch(beforeMove[1]) {
     case "wp":
-        return true;
+      if(beforeMove[0][0]==afterMove[0][0])
+      return true;
     default:
         return false;
   }

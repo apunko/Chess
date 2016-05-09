@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
   
+  get 'openings/edit'
+
+  get 'openings/update'
+
   get 'games/show'
 
   get 'games/index'
