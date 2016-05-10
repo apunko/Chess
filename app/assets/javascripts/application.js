@@ -69,14 +69,18 @@ function initializeUI(){
                 setPosition($(this), afterMove[0], beforeMove[0]);
 
                 fullMove = getFullMove(beforeMove, afterMove);
-                changeBoardState(beforeMove, afterMove);
-                changeHistoryState(fullMove);
+                if (ChessUtils.moveIsPossible(fullMove)){
+                    changeBoardState(beforeMove, afterMove);
+                    changeHistoryState(fullMove);
 
-                moveIsReadyForSubmit = true;
-                disableButtons(false);
+                    moveIsReadyForSubmit = true;
+                    disableButtons(false);
+                }
+                else {
+                    revertMove(beforeMove, afterMove);
+                }
             }
             else {
-                revertMove(beforeMove);
                 if (!moveIsReadyForSubmit){
                     disableButtons(true);
                 }
@@ -126,15 +130,6 @@ function changeHistoryState(fMove) {
                 .append($('<td>'))
             );
     }
-}
-
-function isMovePossible(beforeMove, afterMove){
-  switch(beforeMove[1]) {
-    case "wp":
-      return true;
-    default:
-        return true;
-  }
 }
 
 function setButtonsEvents(){
