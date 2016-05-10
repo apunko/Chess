@@ -8,7 +8,7 @@ var ChessUtils = {
                     figureType = "w";
                 }
                 else {
-                    figureType = "b"
+                    figureType = "b";
                 }
                 figureType += fMove[0];
                 var bPosition = fMove[1] + fMove[2];

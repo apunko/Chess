@@ -144,8 +144,6 @@ function setButtonsEvents(){
                 history: history_ar
             }
         });
-        moveIsReadyForSubmit = false;
-        disableButtons(true);
     });
     $("#RevertMoveButton").click(function() {
         revertMoveFromHistory();

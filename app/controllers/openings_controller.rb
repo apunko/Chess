@@ -5,9 +5,9 @@ class OpeningsController < ApplicationController
   end
 
   def update
-    half_move = params[:move]
-    history = JSON.parse(params[:history])
-    insert_half_move(history, half_move)
+    new_opening_array = params[:history]
+    tree = Tree::TreeNode.new("", "")
+    Opening.create(tree: tree.to_json)
   end
 
   private

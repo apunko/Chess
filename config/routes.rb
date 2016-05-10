@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  
-  get 'openings/index'
 
+  get 'openings/index'
+  patch 'openings/index', to: 'openings#update'
   get 'games/show'
 
   get 'games/index'
