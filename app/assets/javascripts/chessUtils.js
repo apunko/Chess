@@ -4,12 +4,19 @@ var ChessUtils = {
         var bPosition = fMove[1] + fMove[2];
         var aPosition = fMove[3] + fMove[4];
         var isTaking = fMove[5];
-        var moveWidth = 0;
-        var moveLength = 0;
+        if (bPosition == aPosition) return false;
+        if (isTaking){
+            if (whiteMove == true && fMove[6] == "w"){
+                return false;
+            }
+            if (whiteMove == false && fMove[6] == "b"){
+                return false;
+            }
+        }
+        var moveWidth = digLet[aPosition[0]] - digLet[bPosition[0]];
+        var moveLength = parseInt(aPosition[1]) - parseInt(bPosition[1]);
         switch(figureType) {
             case "p":
-                moveWidth = digLet[aPosition[0]] - digLet[bPosition[0]];
-                moveLength = parseInt(aPosition[1]) - parseInt(bPosition[1]);
                 if (whiteMove) {
                     if (isTaking == "x") {
                         if (Math.abs(moveWidth) != 1){
@@ -30,6 +37,9 @@ var ChessUtils = {
                             if (moveLength < 1) {
                                 return false;
                             }
+                            if (!noFiguresOnWay("p", bPosition, aPosition)) {
+                                return false;
+                            }
                         }
                         else {
                             if (moveLength != 1) {
@@ -43,7 +53,7 @@ var ChessUtils = {
                         if (Math.abs(moveWidth) != 1){
                             return false;
                         }
-                        if ((-1)*moveWidth != 1) {
+                        if ((-1)*moveLength != 1) {
                             return false;
                         }
                     }
@@ -52,15 +62,18 @@ var ChessUtils = {
                             return false;
                         }
                         if (parseInt(bPosition[1]) == 7){
-                            if ((-1)*moveWidth > 2) {
+                            if ((-1)*moveLength > 2) {
                                 return false;
                             }
-                            if ((-1)*moveWidth < 1) {
+                            if ((-1)*moveLength < 1) {
+                                return false;
+                            }
+                            if (!noFiguresOnWay("p", bPosition, aPosition)) {
                                 return false;
                             }
                         }
                         else {
-                            if ((-1)*moveWidth != 1) {
+                            if ((-1)*moveLength != 1) {
                                 return false;
                             }
                         }
@@ -77,9 +90,33 @@ var ChessUtils = {
                 return false;
             case "b":
                 if (Math.abs(moveWidth) == Math.abs(moveLength)) {
-                    if (noFiguresOnWay("b")) {
+                    if (noFiguresOnWay("b", bPosition, aPosition)) {
                         return true;
                     }
+                }
+                return false;
+            case "r":
+                if (moveWidth == 0 || moveLength == 0) {
+                    if (noFiguresOnWay("r", bPosition, aPosition)) {
+                        return true;
+                    }
+                }
+                return false;
+            case "q":
+                if (moveWidth == 0 || moveLength == 0) {
+                    if (noFiguresOnWay("r", bPosition, aPosition)) {
+                        return true;
+                    }
+                }
+                if (Math.abs(moveWidth) == Math.abs(moveLength)) {
+                    if (noFiguresOnWay("b", bPosition, aPosition)) {
+                        return true;
+                    }
+                }
+                return false;
+            case "k":
+                if (Math.abs(moveWidth) == 1 || Math.abs(moveLength) == 1){
+                    return true;
                 }
                 return false;
             default:
@@ -107,10 +144,10 @@ function noFiguresOnWay(stype, bPosition, aPosition) {
             }
             else {
                 if (bPosition[1] == 7 && aPosition[1] == 5){
+                    currentPosition = incrementPosition(bPosition, "rd");
                     if (board[currentPosition] != undefined) {
                         return false;
                     }
-                    currentPosition = incrementPosition(bPosition, "rd");
                 }
             }
             return true;
@@ -128,6 +165,7 @@ function noFiguresOnWay(stype, bPosition, aPosition) {
             else {
                 type += "l"
             }
+            currentPosition = incrementPosition(currentPosition, type);
             while (currentPosition != aPosition && i < 8) {
                 if (board[currentPosition] != undefined) {
                     return false;
@@ -149,6 +187,7 @@ function noFiguresOnWay(stype, bPosition, aPosition) {
             if (moveWidth < 0) {
                 type = "rl";
             }
+            currentPosition = incrementPosition(currentPosition, type);
             while (currentPosition != aPosition && i < 8) {
                 if (board[currentPosition] != undefined) {
                     return false;
@@ -188,6 +227,7 @@ function noFiguresOnWay(stype, bPosition, aPosition) {
                     type += "l"
                 }
             }
+            currentPosition = incrementPosition(currentPosition, type);
             while (currentPosition != aPosition && i < 8) {
                 if (board[currentPosition] != undefined) {
                     return false;

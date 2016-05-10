@@ -35,55 +35,34 @@ var beforeMoveToSubmit = [];
 var fullMove = null;
 var moveIsReadyForSubmit = false;
 var history_ar = [];
-var history_length = 0;
 var whiteMove = true;
 
 function initializeUI(){
     $( ".draggable" ).draggable({
         containment: 'parent',
         start: function(event, ui) {
-            //if (moveIsReadyForSubmit && false) return;
             var position = ui.position;
             beforeMove = getMove(getCentral(position), $(this).attr("figuretype"));;
         },
-        drag: function(event, ui) {
-            if(moveIsReadyForSubmit && false) return false;
-        },
-        stop: function(event, ui){
+        drag: function(event, ui) {},
+        stop: function(event, ui) {
             position = ui.position;
             afterMove = getMove(getCentral(position), $(this).attr("figuretype"));
-            if (beforeMove[1][0] == "w" && whiteMove){
-                whiteMove = false;
-            }
-            else if(beforeMove[1][0] == "b" && !whiteMove) {
-                whiteMove = true;
-            }
-            else {
-                revertMove(beforeMove, afterMove);
+            setPosition($(this), afterMove[0], beforeMove[0]);
+            debugger;
+            if (!((beforeMove[1][0] == "w" && whiteMove) || (beforeMove[1][0] == "b" && !whiteMove))) {
+                revertMoveOnElement($(this), beforeMove, afterMove);
                 return;
             }
-            if (moveIsReadyForSubmit && false) return;
-            if (!moveIsReadyForSubmit && isMovePossible(beforeMove, afterMove) || true){
-                afterMoveToSubmit = afterMove;
-                beforeMoveToSubmit = beforeMove;
-                setPosition($(this), afterMove[0], beforeMove[0]);
-
-                fullMove = getFullMove(beforeMove, afterMove);
-                if (ChessUtils.moveIsPossible(fullMove)){
-                    changeBoardState(beforeMove, afterMove);
-                    changeHistoryState(fullMove);
-
-                    moveIsReadyForSubmit = true;
-                    disableButtons(false);
-                }
-                else {
-                    revertMove(beforeMove, afterMove);
-                }
+            fullMove = getFullMove(beforeMove, afterMove);
+            debugger;
+            if (ChessUtils.moveIsPossible(fullMove)) {
+                changeBoardState(beforeMove, afterMove);
+                changeHistoryState(fullMove);
+                whiteMove = !whiteMove;
             }
             else {
-                if (!moveIsReadyForSubmit){
-                    disableButtons(true);
-                }
+                revertMoveOnElement($(this), beforeMove, afterMove);
             }
         }
     });
@@ -94,7 +73,7 @@ function initializeUI(){
 function getFullMove(bMove, aMove) {
     var fMove = bMove[1][1]+bMove[0]+aMove[0];
     if (board[aMove[0]] != undefined) {
-        fMove += "x"+board[aMove[0]][1];
+        fMove += "x"+board[aMove[0]];
     }
     return fMove;
 }
@@ -152,7 +131,7 @@ function setButtonsEvents(){
     $("#CancelMoveButton").click(function() {
     debugger;
     moveIsReadyForSubmit = false;
-    revertMove(afterMove);
+    revertMove(beforeMove, afterMove);
     disableButtons(true);
     });
     $("#SubmitOpeningLine").click(function() {
@@ -170,8 +149,13 @@ function setButtonsEvents(){
 }
 
 function revertMove(bMove, aMove){
-  var elem = $("." + bMove[0]);
+    debugger;
+  var elem = $("." + aMove[0]);
   setPosition(elem, bMove[0], aMove[0]);
+}
+
+function revertMoveOnElement(elem, bMove, aMove){
+    setPosition(elem, bMove[0], aMove[0]);
 }
 
 function disableButtons(value){
@@ -260,14 +244,14 @@ var boardLetters = "abcdefgh";
 var boardDigits = "87654321"
 
 function setLettersAndDigits(){
-  for (var i = 0; i<boardLetters.length; i++){
-    var newDiv = $("<div class='letter'></div>").append(boardLetters[i]);
-    newDiv.css({left: 26+i*Constants.CellWidth});
-    $("#board").append(newDiv);
-  }
-  for (var i = 0; i<boardDigits.length; i++){
-    var newDiv = $("<div class='digit'></div>").append(boardDigits[i]);
-    newDiv.css({top: 16+i*Constants.CellWidth});
-    $("#board").append(newDiv);
-  }
+    for (var i = 0; i<boardLetters.length; i++){
+        var newDiv = $("<div class='letter'></div>").append(boardLetters[i]);
+        newDiv.css({left: 26+i*Constants.CellWidth});
+        $("#board").append(newDiv);
+    }
+    for (var i = 0; i<boardDigits.length; i++){
+        var newDiv = $("<div class='digit'></div>").append(boardDigits[i]);
+        newDiv.css({top: 16+i*Constants.CellWidth});
+        $("#board").append(newDiv);
+    }
 }
