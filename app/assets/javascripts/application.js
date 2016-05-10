@@ -36,6 +36,7 @@ var fullMove = null;
 var moveIsReadyForSubmit = false;
 var history_ar = [];
 var history_length = 0;
+var whiteMove = true;
 
 function initializeUI(){
     $( ".draggable" ).draggable({
@@ -43,13 +44,25 @@ function initializeUI(){
         start: function(event, ui) {
             //if (moveIsReadyForSubmit && false) return;
             var position = ui.position;
-            beforeMove = getMove(getCentral(position), $(this).attr("figuretype"));
+            beforeMove = getMove(getCentral(position), $(this).attr("figuretype"));;
         },
-        drag: function(event, ui) { if(moveIsReadyForSubmit && false) return false; },
+        drag: function(event, ui) {
+            if(moveIsReadyForSubmit && false) return false;
+        },
         stop: function(event, ui){
-            if (moveIsReadyForSubmit && false) return;
             position = ui.position;
             afterMove = getMove(getCentral(position), $(this).attr("figuretype"));
+            if (beforeMove[1][0] == "w" && whiteMove){
+                whiteMove = false;
+            }
+            else if(beforeMove[1][0] == "b" && !whiteMove) {
+                whiteMove = true;
+            }
+            else {
+                revertMove(beforeMove, afterMove);
+                return;
+            }
+            if (moveIsReadyForSubmit && false) return;
             if (!moveIsReadyForSubmit && isMovePossible(beforeMove, afterMove) || true){
                 afterMoveToSubmit = afterMove;
                 beforeMoveToSubmit = beforeMove;
@@ -83,13 +96,21 @@ function getFullMove(bMove, aMove) {
 }
 
 function changeBoardState(bMove, aMove){
+    var elems = $("."+aMove[0]);
+    if (elems.length > 1) {
+        if (elems.first().attr("figuretype") != aMove[1]) {
+            elems.first().remove();
+        }
+        else {
+            elems.last().remove();
+        }
+    }
     board[bMove[0]] = undefined;
     board[aMove[0]] = aMove[1];
 }
 
 function changeHistoryState(fMove) {
     history_ar.push(fullMove);
-    debugger;
     var lastTr = $("#history").find('tbody').find('tr').last();
     var tds = $(lastTr).find('td');
     if (history_ar.length % 2 == 1){
@@ -153,9 +174,9 @@ function setButtonsEvents(){
     });
 }
 
-function revertMove(first){
-  var elem = $("."+first[0]);
-  setPosition(elem, beforeMove[0], afterMove[0]);
+function revertMove(bMove, aMove){
+  var elem = $("." + bMove[0]);
+  setPosition(elem, bMove[0], aMove[0]);
 }
 
 function disableButtons(value){
