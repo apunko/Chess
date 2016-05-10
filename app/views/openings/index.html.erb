@@ -1,0 +1,35 @@
+<h1>Openings#edit</h1>
+<p>Find me in app/views/openings/edit.html.erb</p>
+<div class="col-xs-6">
+  <div id="jsongame" style="display: none">
+    <%= @game.jsongame %>
+  </div>
+  <div style="display: inline;">
+    <button id="SubmitMoveButton">Submit move</button>
+    <button id="CancelMoveButton">Cancel</button>
+    <button id="SubmitOpeningLine">Submit opening line</button>
+  </div>
+  <div id="board" class="droppable">
+  </div>
+</div>
+<div class="col-xs-6">
+  <div id="jsonhistory" style="display: none">
+    <%= @game.history %>
+  </div>
+  <div>
+    <table id="history" class="table table-bordered">
+      <thead>
+        <tr>
+          <th>N</th>
+          <th>White</th>
+          <th>Black</th>
+        </tr>
+      </thead>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+    </table>
+  </div>
+</div>

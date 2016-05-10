@@ -5,3 +5,6 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+
+Opening.create(tree:'{\"name\":\"\",\"content\":\"\",\"json_class\":\"Tree::TreeNode\"}')

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160325191839) do
+ActiveRecord::Schema.define(version: 20160510073913) do
 
   create_table "games", force: :cascade do |t|
     t.text     "jsongame",     limit: 65535
@@ -20,9 +20,16 @@ ActiveRecord::Schema.define(version: 20160325191839) do
     t.integer  "user_id",      limit: 4
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.text     "history",      limit: 65535
   end
 
   add_index "games", ["user_id"], name: "index_games_on_user_id", using: :btree
+
+  create_table "openings", force: :cascade do |t|
+    t.text     "tree",       limit: 65535
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  limit: 255, default: "", null: false

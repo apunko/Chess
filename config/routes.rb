@@ -1,8 +1,6 @@
 Rails.application.routes.draw do
   
-  get 'openings/edit'
-
-  get 'openings/update'
+  get 'openings/index'
 
   get 'games/show'
 
@@ -14,6 +12,7 @@ Rails.application.routes.draw do
 
   resources :users, only: [:index, :show, :update]
   resources :games, only: [:index, :show, :create, :update]
+  resources :openings, only: [:index, :update]
 
 
   root 'application#index'

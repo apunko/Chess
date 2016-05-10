@@ -11,6 +11,7 @@
 /log/*
 !/log/.keep
 /tmp
+.idea
 config/database.yml
 config/secrets.yml
 app/assets/images
