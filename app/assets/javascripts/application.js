@@ -41,6 +41,7 @@ function initializeUI(){
     $( ".draggable" ).draggable({
         containment: 'parent',
         start: function(event, ui) {
+            $(this).zIndex(10);
             var position = ui.position;
             beforeMove = getMove(getCentral(position), $(this).attr("figuretype"));;
         },
@@ -64,6 +65,7 @@ function initializeUI(){
             else {
                 revertMoveOnElement($(this), beforeMove, afterMove);
             }
+            $(this).zIndex(5);
         }
     });
     setButtonsEvents();
@@ -113,26 +115,25 @@ function changeHistoryState(fMove) {
 
 function setButtonsEvents(){
     $("#SubmitMoveButton").click(function() {
-      debugger;
-    $.ajax({
-      type: "PATCH",
-      url: document.URL,
-      data: {
-        moves:
-        {
-          before: beforeMoveToSubmit,
-          after: afterMoveToSubmit
-        }
-      }
-    });
-    moveIsReadyForSubmit = false;
-    disableButtons(true);
+        $.ajax({
+          type: "PATCH",
+          url: document.URL,
+          data: {
+            moves:
+            {
+              before: beforeMoveToSubmit,
+              after: afterMoveToSubmit
+            }
+          }
+        });
+        moveIsReadyForSubmit = false;
+        disableButtons(true);
     });
     $("#CancelMoveButton").click(function() {
-    debugger;
-    moveIsReadyForSubmit = false;
-    revertMove(beforeMove, afterMove);
-    disableButtons(true);
+        debugger;
+        moveIsReadyForSubmit = false;
+        revertMove(beforeMove, afterMove);
+        disableButtons(true);
     });
     $("#SubmitOpeningLine").click(function() {
         debugger;
@@ -146,6 +147,63 @@ function setButtonsEvents(){
         moveIsReadyForSubmit = false;
         disableButtons(true);
     });
+    $("#RevertMoveButton").click(function() {
+        revertMoveFromHistory();
+    });
+}
+
+function revertMoveFromHistory() {
+    debugger;
+    var lastMove = history_ar.pop();
+    if (lastMove != undefined) {
+        whiteMove = !whiteMove;
+        revertByFullMove(lastMove, (history_ar.length + 1) % 2 == 1);
+        deleteLastMoveOnBoardHistory();
+    }
+}
+
+function deleteLastMoveOnBoardHistory() {
+    debugger;
+    var lastTr = $("#history").find('tbody').find('tr').last();
+    var tds = $(lastTr).find('td');
+    if ((history_ar.length + 1) % 2 == 1){
+        $(tds[0]).text("");
+        $(tds[1]).text("");
+    }
+    else {
+        var trsLength = $("#history").find('tbody').find('tr').length;
+        var preLastTr = $("#history").find('tbody').find('tr')[trsLength-2];
+        tds = $(preLastTr).find('td');
+        $("#history").find('tbody').find('tr').last().remove();
+        $(tds[2]).text("");
+    }
+}
+
+function revertByFullMove(fMove, wMove){
+    debugger;
+    var figureType = "";
+    if (wMove) {
+        figureType = "w";
+    }
+    else {
+        figureType = "b"
+    }
+    figureType += fMove[0];
+    var bPosition = fMove[1] + fMove[2];
+    var aPosition = fMove[3] + fMove[4];
+    var divFig = $("." + aPosition).first();
+    setPosition(divFig, bPosition, aPosition);
+    var isTaking = fMove[5];
+    if (isTaking){
+        var figureToRecreate = fMove[6] + fMove[7];
+        createElementFigure(aPosition, figureToRecreate);
+        board[aPosition] = figureToRecreate;
+        board[bPosition] = figureType;
+    }
+    else {
+        delete board[aPosition];
+        board[bPosition] = figureType;
+    }
 }
 
 function revertMove(bMove, aMove){
