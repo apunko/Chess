@@ -56,7 +56,7 @@ function initializeUI(){
             }
             fullMove = getFullMove(beforeMove, afterMove);
             debugger;
-            if (ChessUtils.moveIsPossible(fullMove)) {
+            if (ChessUtils.moveIsPossible(fullMove, true)) {
                 changeBoardState(beforeMove, afterMove);
                 changeHistoryState(fullMove);
                 whiteMove = !whiteMove;
@@ -71,9 +71,9 @@ function initializeUI(){
 }
 
 function getFullMove(bMove, aMove) {
-    var fMove = bMove[1][1]+bMove[0]+aMove[0];
+    var fMove = bMove[1][1] + bMove[0] + aMove[0];
     if (board[aMove[0]] != undefined) {
-        fMove += "x"+board[aMove[0]];
+        fMove += "x" + board[aMove[0]];
     }
     return fMove;
 }
@@ -88,7 +88,7 @@ function changeBoardState(bMove, aMove){
             elems.last().remove();
         }
     }
-    board[bMove[0]] = undefined;
+    delete board[bMove[0]];
     board[aMove[0]] = aMove[1];
 }
 

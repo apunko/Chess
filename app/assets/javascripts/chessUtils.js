@@ -1,128 +1,60 @@
+var instanceBoard = [];
 var ChessUtils = {
-    moveIsPossible : function(fMove) {
-        var figureType = fMove[0];
-        var bPosition = fMove[1] + fMove[2];
-        var aPosition = fMove[3] + fMove[4];
-        var isTaking = fMove[5];
-        if (bPosition == aPosition) return false;
-        if (isTaking){
-            if (whiteMove == true && fMove[6] == "w"){
-                return false;
-            }
-            if (whiteMove == false && fMove[6] == "b"){
-                return false;
-            }
-        }
-        var moveWidth = digLet[aPosition[0]] - digLet[bPosition[0]];
-        var moveLength = parseInt(aPosition[1]) - parseInt(bPosition[1]);
-        switch(figureType) {
-            case "p":
+    moveIsPossible : function(fMove, check) {
+        if (movementIsPossible(fMove)){
+            if (check) {
+                var figureType = "";
                 if (whiteMove) {
-                    if (isTaking == "x") {
-                        if (Math.abs(moveWidth) != 1){
-                            return false;
-                        }
-                        if (moveLength != 1) {
-                            return false;
-                        }
-                    }
-                    else {
-                        if (moveWidth != 0) {
-                            return false;
-                        }
-                        if (parseInt(bPosition[1]) == 2){
-                            if (moveLength > 2) {
-                                return false;
-                            }
-                            if (moveLength < 1) {
-                                return false;
-                            }
-                            if (!noFiguresOnWay("p", bPosition, aPosition)) {
-                                return false;
-                            }
-                        }
-                        else {
-                            if (moveLength != 1) {
-                                return false;
-                            }
-                        }
-                    }
+                    figureType = "w";
                 }
                 else {
-                    if (isTaking == "x") {
-                        if (Math.abs(moveWidth) != 1){
-                            return false;
-                        }
-                        if ((-1)*moveLength != 1) {
-                            return false;
-                        }
-                    }
-                    else {
-                        if (moveWidth != 0) {
-                            return false;
-                        }
-                        if (parseInt(bPosition[1]) == 7){
-                            if ((-1)*moveLength > 2) {
-                                return false;
-                            }
-                            if ((-1)*moveLength < 1) {
-                                return false;
-                            }
-                            if (!noFiguresOnWay("p", bPosition, aPosition)) {
-                                return false;
-                            }
-                        }
-                        else {
-                            if ((-1)*moveLength != 1) {
-                                return false;
-                            }
-                        }
-                    }
+                    figureType = "b"
                 }
-                return true;
-            case "n":
-                if (Math.abs(moveWidth) == 1 && Math.abs(moveLength) == 2) {
-                    return true;
+                figureType += fMove[0];
+                var bPosition = fMove[1] + fMove[2];
+                var aPosition = fMove[3] + fMove[4];
+                instanceBoard = JSON.parse(JSON.stringify(board));
+                delete instanceBoard[bPosition];
+                instanceBoard[aPosition] = figureType;
+                if (kingUnderCheck(instanceBoard)) {
+                    return false;
                 }
-                if (Math.abs(moveWidth) == 2 && Math.abs(moveLength) == 1) {
-                    return true;
-                }
-                return false;
-            case "b":
-                if (Math.abs(moveWidth) == Math.abs(moveLength)) {
-                    if (noFiguresOnWay("b", bPosition, aPosition)) {
-                        return true;
-                    }
-                }
-                return false;
-            case "r":
-                if (moveWidth == 0 || moveLength == 0) {
-                    if (noFiguresOnWay("r", bPosition, aPosition)) {
-                        return true;
-                    }
-                }
-                return false;
-            case "q":
-                if (moveWidth == 0 || moveLength == 0) {
-                    if (noFiguresOnWay("r", bPosition, aPosition)) {
-                        return true;
-                    }
-                }
-                if (Math.abs(moveWidth) == Math.abs(moveLength)) {
-                    if (noFiguresOnWay("b", bPosition, aPosition)) {
-                        return true;
-                    }
-                }
-                return false;
-            case "k":
-                if (Math.abs(moveWidth) == 1 || Math.abs(moveLength) == 1){
-                    return true;
-                }
-                return false;
-            default:
-                return true;
+            }
+            return true;
         }
         return false;
+    },
+
+    kingUnderCheck: function (board) {
+        instanceBoard = JSON.parse(JSON.stringify(board));
+        return kingUnderCheck(instanceBoard);
+    }
+}
+
+function  kingUnderCheck(board) {
+    debugger;
+    var kingColor = "b";
+    if (whiteMove) {kingColor = "w";}
+    var kingPosition = findKing(board, kingColor + "k");
+    whiteMove = !whiteMove;
+    for (var position in board) {
+        if (board[position][0] != kingColor) {
+            var fMove = board[position][1] + position + kingPosition + "x" + kingColor;
+            if (ChessUtils.moveIsPossible(fMove, false)){
+                whiteMove = !whiteMove;
+                return true;
+            }
+        }
+    }
+    whiteMove = !whiteMove;
+    return false;
+}
+
+function findKing(board, value) {
+    for (var position in board) {
+        if (board[position] == value) {
+            return position;
+        }
     }
 }
 
@@ -137,7 +69,7 @@ function noFiguresOnWay(stype, bPosition, aPosition) {
             if (whiteMove) {
                 if (bPosition[1] == 2 && aPosition[1] == 4){
                     currentPosition = incrementPosition(bPosition, "ru");
-                    if (board[currentPosition] != undefined) {
+                    if (instanceBoard[currentPosition] != undefined) {
                         return false;
                     }
                 }
@@ -145,7 +77,7 @@ function noFiguresOnWay(stype, bPosition, aPosition) {
             else {
                 if (bPosition[1] == 7 && aPosition[1] == 5){
                     currentPosition = incrementPosition(bPosition, "rd");
-                    if (board[currentPosition] != undefined) {
+                    if (instanceBoard[currentPosition] != undefined) {
                         return false;
                     }
                 }
@@ -167,7 +99,7 @@ function noFiguresOnWay(stype, bPosition, aPosition) {
             }
             currentPosition = incrementPosition(currentPosition, type);
             while (currentPosition != aPosition && i < 8) {
-                if (board[currentPosition] != undefined) {
+                if (instanceBoard[currentPosition] != undefined) {
                     return false;
                 }
                 i++;
@@ -189,7 +121,7 @@ function noFiguresOnWay(stype, bPosition, aPosition) {
             }
             currentPosition = incrementPosition(currentPosition, type);
             while (currentPosition != aPosition && i < 8) {
-                if (board[currentPosition] != undefined) {
+                if (instanceBoard[currentPosition] != undefined) {
                     return false;
                 }
                 i++;
@@ -229,7 +161,7 @@ function noFiguresOnWay(stype, bPosition, aPosition) {
             }
             currentPosition = incrementPosition(currentPosition, type);
             while (currentPosition != aPosition && i < 8) {
-                if (board[currentPosition] != undefined) {
+                if (instanceBoard[currentPosition] != undefined) {
                     return false;
                 }
                 i++;
@@ -270,6 +202,138 @@ function incrementPosition(position, type) {
             return newPosition;
         default: return newPosition;
     };
+}
+
+function movementIsPossible(fMove){
+    var figureType = fMove[0];
+    var bPosition = fMove[1] + fMove[2];
+    var aPosition = fMove[3] + fMove[4];
+    var isTaking = fMove[5];
+    if (bPosition == aPosition) return false;
+    if (isTaking){
+        if (whiteMove == true && fMove[6] == "w"){
+            return false;
+        }
+        if (whiteMove == false && fMove[6] == "b"){
+            return false;
+        }
+        if (fMove[7] == "k"){
+            return false;
+        }
+    }
+    var moveWidth = digLet[aPosition[0]] - digLet[bPosition[0]];
+    var moveLength = parseInt(aPosition[1]) - parseInt(bPosition[1]);
+    switch(figureType) {
+        case "p":
+            if (whiteMove) {
+                if (isTaking == "x") {
+                    if (Math.abs(moveWidth) != 1){
+                        return false;
+                    }
+                    if (moveLength != 1) {
+                        return false;
+                    }
+                }
+                else {
+                    if (moveWidth != 0) {
+                        return false;
+                    }
+                    if (parseInt(bPosition[1]) == 2){
+                        if (moveLength > 2) {
+                            return false;
+                        }
+                        if (moveLength < 1) {
+                            return false;
+                        }
+                        if (!noFiguresOnWay("p", bPosition, aPosition)) {
+                            return false;
+                        }
+                    }
+                    else {
+                        if (moveLength != 1) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            else {
+                if (isTaking == "x") {
+                    if (Math.abs(moveWidth) != 1){
+                        return false;
+                    }
+                    if ((-1)*moveLength != 1) {
+                        return false;
+                    }
+                }
+                else {
+                    if (moveWidth != 0) {
+                        return false;
+                    }
+                    if (parseInt(bPosition[1]) == 7){
+                        if ((-1)*moveLength > 2) {
+                            return false;
+                        }
+                        if ((-1)*moveLength < 1) {
+                            return false;
+                        }
+                        if (!noFiguresOnWay("p", bPosition, aPosition)) {
+                            return false;
+                        }
+                    }
+                    else {
+                        if ((-1)*moveLength != 1) {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        case "n":
+            if (Math.abs(moveWidth) == 1 && Math.abs(moveLength) == 2) {
+                return true;
+            }
+            if (Math.abs(moveWidth) == 2 && Math.abs(moveLength) == 1) {
+                return true;
+            }
+            return false;
+        case "b":
+            if (Math.abs(moveWidth) == Math.abs(moveLength)) {
+                if (noFiguresOnWay("b", bPosition, aPosition)) {
+                    return true;
+                }
+            }
+            return false;
+        case "r":
+            if (moveWidth == 0 || moveLength == 0) {
+                if (noFiguresOnWay("r", bPosition, aPosition)) {
+                    return true;
+                }
+            }
+            return false;
+        case "q":
+            if (moveWidth == 0 || moveLength == 0) {
+                if (noFiguresOnWay("r", bPosition, aPosition)) {
+                    return true;
+                }
+            }
+            if (Math.abs(moveWidth) == Math.abs(moveLength)) {
+                if (noFiguresOnWay("b", bPosition, aPosition)) {
+                    return true;
+                }
+            }
+            return false;
+        case "k":
+            if (Math.abs(moveWidth) > 1 || Math.abs(moveLength) > 1) {
+                return false;
+            }
+            if (Math.abs(moveWidth) == 1 || Math.abs(moveLength) == 1){
+                return true;
+            }
+            return false;
+        default:
+            return true;
+    }
+    return false;
 }
 
 var digLet = {
