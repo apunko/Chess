@@ -5,22 +5,13 @@ class OpeningsController < ApplicationController
   end
 
   def update
-    new_opening_array = params[:history]
-    tree = Tree::TreeNode.new("", "")
-    Opening.create(tree: tree.to_json)
+    new_opening_line = params[:history]
+    opening = Opening.last
+    tree = Tree::TreeNode.new('', '')
+    #tree = Tree::TreeNode.json_create(opening.tree)
+    opening.tree = opening.insertOpeningLine(tree, new_opening_line)
+    opening.save
+    render nothing: true
   end
 
-  private
-
-  def insert_half_move(history, half_move)
-    puts "insert_half_move started"
-    @opening = Opening.first
-    history.foreach do |move|
-      move.foreach do |half_move|
-        @i = 1
-      end 
-    end 
-    opening.update
-    puts "insert_half_move ended"
-  end
 end
