@@ -12,74 +12,119 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require twitter/bootstrap
 //= require turbolinks
 //= require_tree .
 
 
 $(function() {
-  initJson = JSON.parse($("#jsongame").text())
-  setArray();
-  setInitFigures();
-  setLettersAndDigits();
-  initializeUI();
+    initJson = JSON.parse($("#jsongame").text());
+    //history = JSON.parse($("#jsonhistory").text());
+    board = initJson;
+    setArray();
+    setInitFigures();
+    setLettersAndDigits();
+    initializeUI();
 });
 
+var board = null;
 var beforeMove = [];
 var afterMove = [];
 var afterMoveToSubmit = [];
 var beforeMoveToSubmit = [];
+var fullMove = null;
 var moveIsReadyForSubmit = false;
+var history_ar = [];
+var history_length = 0;
 
 function initializeUI(){
-  $( ".draggable" ).draggable({
-    containment: 'parent',
-    start: function(event, ui) {
-      if (moveIsReadyForSubmit) return;
-      var position = ui.position;
-      beforeMove = getMove(getCentral(position), $(this).attr("figuretype"));
-    }, 
-    drag: function(event, ui) { if(moveIsReadyForSubmit) return false; },
-    stop: function(event, ui){
-      if (moveIsReadyForSubmit) return;
-      position = ui.position; 
-      afterMove = getMove(getCentral(position), $(this).attr("figuretype"));
-      if (!moveIsReadyForSubmit && isMovePossible(beforeMove, afterMove)){
-        afterMoveToSubmit = afterMove;
-        beforeMoveToSubmit = beforeMove;
-        setPosition($(this), afterMove[0], beforeMove[0]);
-        moveIsReadyForSubmit = true;
-        disableButtons(false);
-      }
-      else {
-        revertMove(beforeMove);
-        if (!moveIsReadyForSubmit){
-          disableButtons(true);  
+    $( ".draggable" ).draggable({
+        containment: 'parent',
+        start: function(event, ui) {
+            //if (moveIsReadyForSubmit && false) return;
+            var position = ui.position;
+            beforeMove = getMove(getCentral(position), $(this).attr("figuretype"));
+        },
+        drag: function(event, ui) { if(moveIsReadyForSubmit && false) return false; },
+        stop: function(event, ui){
+            if (moveIsReadyForSubmit && false) return;
+            position = ui.position;
+            afterMove = getMove(getCentral(position), $(this).attr("figuretype"));
+            if (!moveIsReadyForSubmit && isMovePossible(beforeMove, afterMove) || true){
+                afterMoveToSubmit = afterMove;
+                beforeMoveToSubmit = beforeMove;
+                setPosition($(this), afterMove[0], beforeMove[0]);
+
+                fullMove = getFullMove(beforeMove, afterMove);
+                changeBoardState(beforeMove, afterMove);
+                changeHistoryState(fullMove);
+
+                moveIsReadyForSubmit = true;
+                disableButtons(false);
+            }
+            else {
+                revertMove(beforeMove);
+                if (!moveIsReadyForSubmit){
+                    disableButtons(true);
+                }
+            }
         }
-      }
+    });
+    setButtonsEvents();
+    disableButtons(true);
+}
+
+function getFullMove(bMove, aMove) {
+    var fMove = bMove[1][1]+bMove[0]+aMove[0];
+    if (board[aMove[0]] != undefined) {
+        fMove += "x"+board[aMove[0]][1];
     }
-  });
-  setButtonsEvents();
-  disableButtons(true);
+    return fMove;
+}
+
+function changeBoardState(bMove, aMove){
+    board[bMove[0]] = undefined;
+    board[aMove[0]] = aMove[1];
+}
+
+function changeHistoryState(fMove) {
+    history_ar.push(fullMove);
+    debugger;
+    var lastTr = $("#history").find('tbody').find('tr').last();
+    var tds = $(lastTr).find('td');
+    if (history_ar.length % 2 == 1){
+        $(tds[0]).text((history_ar.length / 2 | 0) + 1);
+        $(tds[1]).text(fullMove);
+    }
+    else {
+        $(tds[2]).text(fullMove);
+        $("#history").find('tbody').last()
+            .append($('<tr>')
+                .append($('<td>'))
+                .append($('<td>'))
+                .append($('<td>'))
+            );
+    }
 }
 
 function isMovePossible(beforeMove, afterMove){
   switch(beforeMove[1]) {
     case "wp":
-      if(beforeMove[0][0]==afterMove[0][0])
       return true;
     default:
-        return false;
+        return true;
   }
 }
 
 function setButtonsEvents(){
-  $("#SubmitMoveButton").click(function() {
+    $("#SubmitMoveButton").click(function() {
+      debugger;
     $.ajax({
       type: "PATCH",
       url: document.URL,
-      data: { 
-        moves: 
-        { 
+      data: {
+        moves:
+        {
           before: beforeMoveToSubmit,
           after: afterMoveToSubmit
         }
@@ -87,13 +132,25 @@ function setButtonsEvents(){
     });
     moveIsReadyForSubmit = false;
     disableButtons(true);
-  });
-  $("#CancelMoveButton").click(function() {
+    });
+    $("#CancelMoveButton").click(function() {
     debugger;
     moveIsReadyForSubmit = false;
     revertMove(afterMove);
     disableButtons(true);
-  });
+    });
+    $("#SubmitOpeningLine").click(function() {
+        debugger;
+        $.ajax({
+            type: "PATCH",
+            url: document.URL,
+            data: {
+                history: history_ar
+            }
+        });
+        moveIsReadyForSubmit = false;
+        disableButtons(true);
+    });
 }
 
 function revertMove(first){
