@@ -14,3 +14,12 @@
  *= require_self
  */
 
+body {
+    overflow-x: hidden;
+    padding-bottom: 30px;
+}
+
+.navbar-right a img {
+    height: 25px;
+    width: 25px;
+}

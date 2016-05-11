@@ -1,0 +1,11 @@
+<% if flash[:notice] %>
+    <div class="alert alert-info" role="alert"><%= flash[:notice] %></div>
+<% end %>
+<% if flash[:message] %>
+    <div class="alert alert-info" role="alert"><%= flash[:message] %></div>
+<% end %>
+<% if flash[:error] %>
+    <% flash[:error].each do |key, value|%>
+        <div class="alert alert-danger" role="alert"><b><%= key.to_s.capitalize + " " + value.join(", ") %></b></div>
+    <% end %>
+<% end %>

@@ -1,0 +1,21 @@
+<nav class="navbar navbar-default" role="navigation">
+  <ul class="nav navbar-nav">
+    <li><%= link_to "Main", root_path %></li>
+    <% if user_signed_in? %>
+        <li><%= link_to "Home", user_path(current_user), data: { no_turbolink: true } %> </li>
+        <li><%= link_to "Games", games_path %></li>
+        <li><%= link_to "Openings master", openings_index_path %></li>
+    <% end %>
+  </ul>
+
+  <ul  class="nav navbar-nav navbar-right">
+    <% if user_signed_in? %>
+        <li class="navbar-brand"> Welcome <%= current_user.email %>! </li>
+        <li><%= link_to 'Out', destroy_user_session_path, :method => :delete %></li>
+    <% else %>
+        <li><%= link_to 'Sign in', new_user_session_path %> </li><li><%= link_to 'Sing up', new_user_registration_path %></li>
+        <li><%= link_to image_tag("facebook.png"), user_omniauth_authorize_path(:facebook) %> </li>
+        <li><%= link_to image_tag("vk.png"), user_omniauth_authorize_path(:vkontakte) %></li>
+    <% end %>
+  </ul>
+</nav>
