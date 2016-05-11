@@ -35,6 +35,7 @@ var beforeMoveToSubmit = [];
 var fullMove = null;
 var moveIsReadyForSubmit = false;
 var history_ar = [];
+var messages_ar = [];
 var whiteMove = true;
 
 function initializeUI(){
@@ -96,6 +97,10 @@ function changeBoardState(bMove, aMove){
 
 function changeHistoryState(fMove) {
     history_ar.push(fullMove);
+    debugger;
+    var message = $("#opening_message").val();
+    $("#opening_message").val("");
+    messages_ar.push(message);
     var lastTr = $("#history").find('tbody').find('tr').last();
     var tds = $(lastTr).find('td');
     if (history_ar.length % 2 == 1){
@@ -141,7 +146,8 @@ function setButtonsEvents(){
             type: "PATCH",
             url: document.URL,
             data: {
-                history: history_ar
+                history: history_ar,
+                messages: messages_ar
             }
         });
     });
@@ -153,6 +159,13 @@ function setButtonsEvents(){
 function revertMoveFromHistory() {
     debugger;
     var lastMove = history_ar.pop();
+    if (messages_ar.length != 0) {
+        $("#opening_message").val(messages_ar[messages_ar.length - 1]);
+    }
+    else {
+        $("#opening_message").val("");
+    }
+    messages_ar.pop();
     if (lastMove != undefined) {
         whiteMove = !whiteMove;
         revertByFullMove(lastMove, (history_ar.length + 1) % 2 == 1);
@@ -205,7 +218,6 @@ function revertByFullMove(fMove, wMove){
 }
 
 function revertMove(bMove, aMove){
-    debugger;
   var elem = $("." + aMove[0]);
   setPosition(elem, bMove[0], aMove[0]);
 }
