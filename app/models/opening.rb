@@ -1,28 +1,28 @@
 class Opening < ActiveRecord::Base
 
-  def insertOpeningLine(tree, line)
-    findPlaceForNewLine(tree, line, 0)
+  def insert_opening_line(tree, line)
+    find_place_for_new_line(tree, line, 0)
+    tree
   end
 
-
-
   private
-  def findPlaceForNewLine(tree, line, i)
-    if tree[line[i]] == nil
-      insertBranch(tree, line, i)
+  def find_place_for_new_line(tree, line, i)
+    if !tree.is_child(line[i])
+      insert_branch(tree, line, i)
     else
-      tree = tree[line[i]]
+      tree = tree.find(line[i])
       i += 1
-      findPlaceForNewLine(tree, line, i)
+      find_place_for_new_line(tree, line, i)
     end
   end
 
-  def insertBranch(parentNode, line, i)
-    if (line.length > i)
-      parentNode << Tree::TreeNode.new(line[i], ''git staturs)
-      parentNode = parentNode[line[i]]
+  def insert_branch(parentNode, line, i)
+    if (i < line.length)
+      parentNode.insert(line[i], '')
+      parentNode = parentNode.find(line[i])
       i += 1
-      insertBranch(parentNode, line, i)
+      insert_branch(parentNode, line, i)
     end
   end
 end
+

@@ -1,4 +1,6 @@
 class OpeningsController < ApplicationController
+  require 'json'
+  require 'opening_node.rb'
   def index
     @game = Game.new
     @game.jsongame = Game.get_init_state
@@ -7,9 +9,9 @@ class OpeningsController < ApplicationController
   def update
     new_opening_line = params[:history]
     opening = Opening.last
-    tree = Tree::TreeNode.new('', '')
-    #tree = Tree::TreeNode.json_create(opening.tree)
-    opening.tree = opening.insertOpeningLine(tree, new_opening_line)
+    #tree = OpeningNode.new('', '')
+    tree = OpeningNode.from_json(opening.tree)
+    opening.tree = opening.insert_opening_line(tree, new_opening_line).to_json
     opening.save
     render nothing: true
   end
