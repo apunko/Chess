@@ -1,9 +1,43 @@
-<div id="jsongame" style="display: none">
-  <%= @game.jsongame %>
+<div class="col-xs-6" style="float: right;">
+  <div id="jsongame" style="display: none">
+    <%= @game.jsongame %>
+  </div>
+  <div id="board" class="droppable">
+  </div>
 </div>
-<div style="display: inline;">
-  <button id="SubmitMoveButton">Submit move</button>
-  <button id="CancelMoveButton">Cancel</button>
-</div>
-<div id="board" class="droppable">
+<div class="col-xs-6">
+  <h3>Play with computer engine.</h3>
+  <h5>Play game with computer and read hints about opening moves!</h5>
+  <div class="col-xs-12 col-xs-offset-6">
+    <button class="btn btn-primary" id="SubmitMoveButton">Submit move</button>
+    <button class="btn btn-primary" id="CancelMoveButton">Cancel</button>
+  </div>
+  <div class="col-xs-5">
+    <div id="jsonhistory" style="display: none">
+      <%= @game.history %>
+    </div>
+    <h4>Moves history:</h4>
+    <div class="history-div">
+      <table id="history" class="table table-bordered"  >
+        <thead>
+        <tr>
+          <th>N</th>
+          <th>White</th>
+          <th>Black</th>
+        </tr>
+        </thead>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="col-xs-7">
+    <h4>Hint about white move:</h4>
+    <textarea id="whiteMoveTextArea" class="form-control" rows="5" readonly></textarea>
+    <h4>Hint about black move:</h4>
+    <textarea id="blackMoveTextArea" class="form-control" rows="5" readonly></textarea>
+  </div>
 </div>
