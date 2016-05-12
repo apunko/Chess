@@ -1,5 +1,7 @@
 class GamesController < ApplicationController
   require 'json'
+  load_and_authorize_resource
+
   def show
     @game = Game.find(params[:id])
   end

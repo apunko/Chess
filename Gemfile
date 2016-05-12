@@ -27,8 +27,8 @@ gem 'devise'
 gem 'omniauth-facebook'
 gem 'omniauth-vkontakte'
 gem 'json', '~> 1.8', '>= 1.8.3'
-gem 'rubytree', '~> 0.9.7'
 gem "twitter-bootstrap-rails"
+gem 'cancancan', '1.12.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

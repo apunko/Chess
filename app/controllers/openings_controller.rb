@@ -1,6 +1,8 @@
 class OpeningsController < ApplicationController
   require 'json'
   require 'opening_node.rb'
+  load_and_authorize_resource
+
   def index
     @game = Game.new
     @game.jsongame = Game.get_init_state
