@@ -1,38 +1,41 @@
-<h1>Openings#edit</h1>
-<p>Find me in app/views/openings/edit.html.erb</p>
-<div class="col-xs-6">
+<div class="col-xs-6" style="float: right;">
+  <div id="board" class="droppable">
+  </div>
   <div id="jsongame" style="display: none">
     <%= @game.jsongame %>
   </div>
-  <div style="display: inline;">
-    <button id="SubmitMoveButton">Submit move</button>
-    <button id="CancelMoveButton">Cancel</button>
-    <button id="SubmitOpeningLine">Submit opening line</button>
-    <button id="RevertMoveButton">Revert move</button>
-  </div>
-  <div id="board" class="droppable">
-  </div>
 </div>
 <div class="col-xs-6">
-  <h3>Enter help message</h3>
-  <textarea id="opening_message" class="form-control" rows="5" name="description"></textarea><br/>
-  <div id="jsonhistory" style="display: none">
-    <%= @game.history %>
+  <h3>Openings master engine.</h3>
+  <h5>Play positions and add help messages to make our openings better!</h5>
+  <div class="col-xs-12 col-xs-offset-6">
+      <button class="btn btn-primary" id="SubmitOpeningLine">Save opening line</button>
+      <button class="btn btn-primary" id="RevertMoveButton">Revert move</button>
   </div>
-  <div>
-    <table id="history" class="table table-bordered">
-      <thead>
-        <tr>
-          <th>N</th>
-          <th>White</th>
-          <th>Black</th>
-        </tr>
-      </thead>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-    </table>
+  <div class="col-xs-6">
+    <div id="jsonhistory" style="display: none">
+      <%= @game.history %>
+    </div>
+    <h4>Moves history:</h4>
+    <div class="history-div">
+      <table id="history" class="table table-bordered"  >
+        <thead>
+          <tr>
+            <th>N</th>
+            <th>White</th>
+            <th>Black</th>
+          </tr>
+        </thead>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+      </table>
+    </div>
+  </div>
+  <div class="col-xs-6">
+    <h3>Enter help message</h3>
+    <textarea id="opening_message" class="form-control" rows="5" name="description"></textarea>
   </div>
 </div>

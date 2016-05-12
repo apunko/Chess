@@ -24,6 +24,11 @@ body {
     width: 25px;
 }
 
+.history-div {
+    max-height:230px;
+    overflow-y: auto;
+}
+
 div.footerText {
     margin-bottom: 5px;
     text-align: right;
