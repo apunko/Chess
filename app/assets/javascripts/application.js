@@ -25,6 +25,7 @@ $(function() {
     setInitFigures();
     setLettersAndDigits();
     initializeUI();
+    setFooter();
 });
 
 var board = null;

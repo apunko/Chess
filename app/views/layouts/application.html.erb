@@ -6,14 +6,17 @@
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
 </head>
-<body class = "center">
-<div class="row">
-  <div class="col-xs-10 col-xs-offset-1">
-    <%= render "layouts/navbar" %>
-    <%= render "layouts/flash" %>
+<body class="center">
+  <div class="row">
+    <div class="col-xs-10 col-xs-offset-1">
+      <%= render "layouts/navbar" %>
+      <%= render "layouts/flash" %>
 
-    <%= yield %>
+      <%= yield %>
+      <div class="col-xs-12">
+        <%= render "layouts/footer" %>
+      </div>
+      </div>
   </div>
-</div>
 </body>
 </html>

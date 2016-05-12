@@ -64,3 +64,20 @@ function setLettersAndDigits(){
         $("#board").append(newDiv);
     }
 }
+
+function setFooter(){
+    $(window).resize(function () {
+        if ($(document).height() > $(window).height()) {
+            $("#footer").removeClass("navbar-fixed-bottom");
+        }
+        else {
+            $("#footer").addClass("navbar-fixed-bottom");
+        }
+    });
+    if ($(document).height() > $(window).height()) {
+        $("#footer").removeClass("navbar-fixed-bottom");
+    }
+    else {
+        $("#footer").addClass("navbar-fixed-bottom");
+    }
+}
