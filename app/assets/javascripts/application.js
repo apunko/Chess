@@ -27,6 +27,7 @@ $(function() {
     initializeUI();
     setFooter();
     setMoveSide();
+    setButtonsEvents();
     if (window.location.pathname == "/openings/index") {
         isOpeningMode = true;
     }

@@ -43,11 +43,55 @@ function findComputerMove(board) {
     if (whiteMove) {
         sideColor = "w";
     }
-    
+    var bestValue = -Infinity;
+    var bestMove = null;
+    for (var position in board) {
+        if (board[position][0] == sideColor) {
+            var possibleMoves = getPossibleMoves(board, position);
+            for (var i = 0; i < possibleMoves.length; i++){
+                var fMove = possibleMoves[i];
+                var moveValue = estimateMove(fMove);
+                if (moveValue >= bestValue) {
+                    bestMove = moveValue;
+                    bestMove = fMove;
+                }
+            }
+        }
+    }
+    return bestMove;
+}
+
+function estimateMove(move) {
+    return 100;
+}
+
+function getPossibleMoves(board, position) {
+    var figureType = board[position];
+    return getPossibleMovesByFigureType(board, position, figureType);
+}
+
+function getPossibleMovesByFigureType(board, position, ft) {
+    var moves = [];
+    for (var i = 1; i <= 8; i++) {
+        for (var j = 0; j < 8; j++) {
+            var afterPosition = boardLetters[j] + i;
+            var fullMove = ft[1] + position + afterPosition;
+            if (board[afterPosition] != undefined) {
+                fullMove += "x" + board[afterPosition];
+            }
+            if (ChessUtils.moveIsPossible(fullMove, true)){
+                moves.push(fullMove);
+            }
+        }
+    }
+    return moves;
+}
+
+function isCheckMate(board){
+
 }
 
 function  kingUnderCheck(board) {
-    debugger;
     var kingColor = "b";
     if (whiteMove) {kingColor = "w";}
     var kingPosition = findKing(board, kingColor + "k");
@@ -225,6 +269,10 @@ function movementIsPossible(fMove){
     var aPosition = fMove[3] + fMove[4];
     var isTaking = fMove[5];
     if (bPosition == aPosition) return false;
+    if ((parseInt(bPosition[1]) > 8) || (parseInt(bPosition[1]) < 1)) return false;
+    if ((parseInt(aPosition[1]) > 8) || (parseInt(aPosition[1]) < 1)) return false;
+    if (aPosition[0].charCodeAt(0) < "a".charCodeAt(0) || aPosition[0].charCodeAt(0) > "h".charCodeAt(0)) return false;
+    if (bPosition[0].charCodeAt(0) < "a".charCodeAt(0) || bPosition[0].charCodeAt(0) > "h".charCodeAt(0)) return false;
     if (isTaking){
         if (whiteMove == true && fMove[6] == "w"){
             return false;

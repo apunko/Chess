@@ -51,9 +51,10 @@ function initializeUI(){
             fullMove = getFullMove(beforeMove, afterMove);
             debugger;
             if (ChessUtils.moveIsPossible(fullMove, true)) {
-                changeBoardState(beforeMove, afterMove);
-                changeHistoryState(fullMove);
                 whiteMove = !whiteMove;
+                isComputerMove = !isComputerMove;
+                changeHistoryState(fullMove);
+                changeBoardState(beforeMove, afterMove);
             }
             else {
                 revertMoveOnElement($(this), beforeMove, afterMove);
@@ -61,8 +62,27 @@ function initializeUI(){
             $(this).zIndex(5);
         }
     });
-    setButtonsEvents();
-    disableButtons(true);
+}
+
+function makeMoveByFullMove(fMove) {
+    var bMove = fMove[1] + fMove[2];
+    var aMove = fMove[3] + fMove[4];
+    var elem = $("." + bMove);
+    makeMoveByPositions(elem, bMove, aMove, fMove);
+}
+
+function makeMoveByPositions(elem, beforeMove, afterMove, fullMove) {
+    debugger;
+    setPosition($(elem), afterMove, beforeMove);
+    var figureType = "b";
+    if (whiteMove) {
+        figureType = "w";
+    }
+    figureType += fullMove[0];
+    whiteMove = !whiteMove;
+    isComputerMove = !isComputerMove;
+    changeBoardState([beforeMove, figureType], [afterMove, figureType]);
+    changeHistoryState(fullMove);
 }
 
 function setArray(){

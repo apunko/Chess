@@ -76,6 +76,7 @@ function getFullMove(bMove, aMove) {
 }
 
 function changeBoardState(bMove, aMove){
+    debugger;
     var elems = $("."+aMove[0]);
     if (elems.length > 1) {
         if (elems.first().attr("figuretype") != aMove[1]) {
@@ -88,9 +89,10 @@ function changeBoardState(bMove, aMove){
     delete board[bMove[0]];
     board[aMove[0]] = aMove[1];
     if (!isOpeningMode) {
-        isComputerMove = !isComputerMove
         if (isComputerMove) {
             var computerFullMove = ChessUtils.findComputerMove(board);
+            debugger;
+            makeMoveByFullMove(computerFullMove);
         }
     }
 }
