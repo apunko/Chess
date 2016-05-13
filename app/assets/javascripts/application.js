@@ -19,15 +19,22 @@
 
 $(function() {
     initJson = JSON.parse($("#jsongame").text());
-    //history = JSON.parse($("#jsonhistory").text());
     board = initJson;
+    setHistory();
     setArray();
     setInitFigures();
     setLettersAndDigits();
     initializeUI();
     setFooter();
+    setMoveSide();
+    if (window.location.pathname == "/openings/index") {
+        isOpeningMode = true;
+    }
 });
 
+var isComputerMove = false;
+var isOpeningMode = false;
+var jsonHistory = "";
 var board = null;
 var beforeMove = [];
 var afterMove = [];

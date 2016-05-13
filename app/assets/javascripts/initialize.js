@@ -1,3 +1,29 @@
+function setHistory() {
+    debugger;
+    if ($("#gameHistory").length > 0){
+        if ($("#gameHistory").text().trim() != ""){
+            jsonHistory = JSON.parse($("#gameHistory").text());
+            debugger;
+            history_ar = jsonHistory;
+            fillHistoryTable(history_ar);
+        }
+    }
+}
+
+function setMoveSide() {
+    if ($("#isComputerMove").length > 0){
+        if ($("#isComputerMove").text().trim() == "true"){
+            isComputerMove = true;
+        }
+    }
+}
+
+function fillHistoryTable(history_array) {
+    for (var i = 0; i < history_array.length; i++){
+        addMoveToHistoryTable(history_array[i], i);
+    }
+}
+
 function initializeUI(){
     $( ".draggable" ).draggable({
         containment: 'parent',
@@ -8,12 +34,18 @@ function initializeUI(){
         },
         drag: function(event, ui) {},
         stop: function(event, ui) {
-            position = ui.position;
+            var position = ui.position;
             afterMove = getMove(getCentral(position), $(this).attr("figuretype"));
             setPosition($(this), afterMove[0], beforeMove[0]);
             debugger;
+            if (isComputerMove) {
+                revertMoveOnElement($(this), beforeMove, afterMove);
+                $(this).zIndex(5);
+                return;
+            }
             if (!((beforeMove[1][0] == "w" && whiteMove) || (beforeMove[1][0] == "b" && !whiteMove))) {
                 revertMoveOnElement($(this), beforeMove, afterMove);
+                $(this).zIndex(5);
                 return;
             }
             fullMove = getFullMove(beforeMove, afterMove);

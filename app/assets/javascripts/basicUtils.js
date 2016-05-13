@@ -87,29 +87,39 @@ function changeBoardState(bMove, aMove){
     }
     delete board[bMove[0]];
     board[aMove[0]] = aMove[1];
+    if (!isOpeningMode) {
+        isComputerMove = !isComputerMove
+        if (isComputerMove) {
+            var computerFullMove = ChessUtils.findComputerMove(board);
+        }
+    }
 }
 
 function changeHistoryState(fMove) {
-    history_ar.push(fullMove);
+    history_ar.push(fMove);
     debugger;
     var message = $("#opening_message").val();
     $("#opening_message").val("");
     messages_ar.push(message);
+    addMoveToHistoryTable(fMove, history_ar.length);
+}
+
+function addMoveToHistoryTable(fMove, history_length){
     var lastTr = $("#history").find('tbody').find('tr').last();
     var tds = $(lastTr).find('td');
-    if (history_ar.length % 2 == 1){
-        $(tds[0]).text((history_ar.length / 2 | 0) + 1);
-        $(tds[1]).text(fullMove);
+    if (history_length % 2 == 1){
+        $(tds[0]).text((history_length / 2 | 0) + 1);
+        $(tds[1]).text(fMove);
     }
     else {
-        $(tds[2]).text(fullMove);
+        $(tds[2]).text(fMove);
         $("#history").find('tbody').last()
             .append($('<tr>')
                 .append($('<td>'))
                 .append($('<td>'))
                 .append($('<td>'))
             );
-    }
+    } 
 }
 
 function setButtonsEvents(){
@@ -126,12 +136,6 @@ function setButtonsEvents(){
             }
         });
         moveIsReadyForSubmit = false;
-        disableButtons(true);
-    });
-    $("#CancelMoveButton").click(function() {
-        debugger;
-        moveIsReadyForSubmit = false;
-        revertMove(beforeMove, afterMove);
         disableButtons(true);
     });
     $("#SubmitOpeningLine").click(function() {

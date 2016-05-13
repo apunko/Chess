@@ -3,7 +3,7 @@
   <div>
     Your have finished 0 games
   </div>
-  <%= link_to "Start new game", games_path(id: current_user.id), :method => :post, data: { no_turbolink: true } %>
+  <%= link_to "Start new game", games_path(id: current_user.id), :method => :post %>
 </div>
 <div class="col-xs-8">
   <h4>Your active games:</h4>

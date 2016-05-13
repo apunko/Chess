@@ -25,10 +25,25 @@ var ChessUtils = {
         return false;
     },
 
+    findComputerMove: function (board) {
+        debugger;
+        instanceBoard = JSON.parse(JSON.stringify(board));
+        var move = findComputerMove(instanceBoard);
+        return move;
+    },
+
     kingUnderCheck: function (board) {
         instanceBoard = JSON.parse(JSON.stringify(board));
         return kingUnderCheck(instanceBoard);
     }
+}
+
+function findComputerMove(board) {
+    var sideColor = "b";
+    if (whiteMove) {
+        sideColor = "w";
+    }
+    
 }
 
 function  kingUnderCheck(board) {

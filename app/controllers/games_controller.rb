@@ -31,7 +31,4 @@ class GamesController < ApplicationController
     redirect_to game_url(@game.id)
   end
 
-  def game_params
-    params.require(:game).permit(:user_id)
-  end
 end
