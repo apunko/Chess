@@ -19,4 +19,14 @@ class OpeningsController < ApplicationController
     render nothing: true
   end
 
+
+  def get_move
+    history = params[:history]
+    opening = Opening.last
+    tree = OpeningNode.from_json(opening.tree)
+    data_move = opening.find_next_move(tree, history)
+    data = {:move => data_move[0], :message => data_move[1]}
+    render :json => data, :status => :ok
+  end
+
 end

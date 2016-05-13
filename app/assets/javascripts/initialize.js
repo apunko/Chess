@@ -19,7 +19,7 @@ function setMoveSide() {
 }
 
 function fillHistoryTable(history_array) {
-    for (var i = 0; i < history_array.length; i++){
+    for (var i = 1; i <= history_array.length; i++){
         addMoveToHistoryTable(history_array[i], i);
     }
 }

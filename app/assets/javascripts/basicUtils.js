@@ -88,11 +88,39 @@ function changeBoardState(bMove, aMove){
     }
     delete board[bMove[0]];
     board[aMove[0]] = aMove[1];
+    debugger;
     if (!isOpeningMode) {
         if (isComputerMove) {
-            var computerFullMove = ChessUtils.findComputerMove(board);
-            debugger;
-            makeMoveByFullMove(computerFullMove);
+            $.ajax({
+                type: "POST",
+                url: window.location.origin + "/openings/get_move",
+                data: {
+                    history: history_ar
+                },
+                success: function(data){
+                    debugger;
+                    var fullMove = data["move"];
+                    var message = "Hint: " + data["message"];
+                    if (whiteMove) {
+                        $("#whiteMoveTextArea").val(message);
+                    }
+                    else {
+                        $("#blackMoveTextArea").val(message);
+                    }
+                    if (fullMove != "") {
+                        makeMoveByFullMove(fullMove);
+                    }else {
+                        var computerFullMove = ChessUtils.findComputerMove(board);
+                        debugger;
+                        makeMoveByFullMove(computerFullMove);
+                    }
+                },
+                error: function () {
+                    var computerFullMove = ChessUtils.findComputerMove(board);
+                    debugger;
+                    makeMoveByFullMove(computerFullMove);
+                }
+            });
         }
     }
 }
@@ -130,11 +158,8 @@ function setButtonsEvents(){
             type: "PATCH",
             url: document.URL,
             data: {
-                moves:
-                {
-                    before: beforeMoveToSubmit,
-                    after: afterMoveToSubmit
-                }
+                history: history_ar,
+                board_state: board
             }
         });
         moveIsReadyForSubmit = false;

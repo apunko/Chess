@@ -5,6 +5,23 @@ class Opening < ActiveRecord::Base
     tree
   end
 
+  def find_next_move(tree, history)
+    next_move = ""
+    message = ""
+    instant_hash = tree.hash
+    history.each do |full_move|
+      instant_hash = instant_hash[full_move].hash
+      if (!instant_hash)
+        break
+      end
+    end
+    if instant_hash
+      next_move = instant_hash.keys[0]
+      message = instant_hash[next_move].message
+    end
+    [next_move, message]
+  end
+
   private
   def find_place_for_new_line(tree, line, messages, i)
     if !tree.is_child(line[i])
@@ -24,6 +41,10 @@ class Opening < ActiveRecord::Base
       i += 1
       insert_branch(parentNode, line, messages, i)
     end
+  end
+
+  def find_last_node(history)
+
   end
 end
 

@@ -12,11 +12,10 @@ class GamesController < ApplicationController
 
   def update
     game = Game.find(params[:id])
-    moves = params[:moves]
-    board_state = JSON.parse(game.jsongame) 
-    board_state[moves[:after][0]] = moves[:after][1]
-    board_state.delete(moves[:before][0])
+    board_state = params[:board_state]
+    history = params[:history]
     game.jsongame = board_state.to_json
+    game.history = history.to_json
     game.save
     render nothing: true
   end

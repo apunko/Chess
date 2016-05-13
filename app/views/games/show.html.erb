@@ -3,7 +3,7 @@
     <%= @game.jsongame %>
   </div>
   <div id="gameHistory" style="display: none">
-    <% @game.history %>
+    <%= @game.history %>
   </div>
   <div id="isComputerMove" style="display: none">
     <%= @game.computermove %>
@@ -15,8 +15,8 @@
   <h3>Play with computer engine.</h3>
   <h5>Play game with computer and read hints about opening moves!</h5>
   <div class="col-xs-12 col-xs-offset-6">
-    <button class="btn btn-primary" id="SubmitMoveButton">Submit move</button>
-    <button class="btn btn-primary" id="CancelMoveButton">Cancel</button>
+    <button class="btn btn-primary" id="SubmitMoveButton">Save game state</button>
+    <button class="btn btn-primary" id="RevertMoveButton">Revert move</button>
   </div>
   <div class="col-xs-5">
     <div id="jsonhistory" style="display: none">

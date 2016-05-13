@@ -18,6 +18,7 @@
 
 
 $(function() {
+    debugger;
     initJson = JSON.parse($("#jsongame").text());
     board = initJson;
     setHistory();

@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   patch 'openings/index', to: 'openings#update'
   get 'games/show'
 
+  post 'openings/get_move'
+
   get 'games/index'
 
   get 'games/create'

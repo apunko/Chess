@@ -1,5 +1,5 @@
 class OpeningNode
-  attr_accessor :move, :message
+  attr_accessor :move, :message, :hash
   def initialize(move, message)
     @move = move
     @message = message
