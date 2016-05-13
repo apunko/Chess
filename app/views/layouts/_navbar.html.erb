@@ -5,7 +5,7 @@
     <% if user_signed_in? %>
         <li><%= link_to "Home", user_path(current_user), data: { no_turbolink: true } %> </li>
         <li><%= link_to "Games", games_path %></li>
-        <li><%= link_to "Openings master", openings_index_path %></li>
+        <li><%= link_to "Openings master", openings_index_path, data: { no_turbolink: true } %></li>
     <% end %>
   </ul>
 
